@@ -17,22 +17,27 @@
         </div>
 
         <div id="experiment" style="display: none;">
-            <h2 id="trialCounter">Trial X of Y</h2>
-            <p>Listen to both samples and select your choice:</p>
-            <div class="audio-pair">
-                <div class="audio-control">
-                    <p>Sample A</p>
-                    <audio id="audioA"></audio>
-                    <button class="playButton" data-target="audioA">Play A</button>
-                    <button class="choiceButton" data-choice="A">Select A</button>
-                </div>
-                <div class="audio-control">
-                    <p>Sample B</p>
-                    <audio id="audioB"></audio>
-                    <button class="playButton" data-target="audioB">Play B</button>
-                    <button class="choiceButton" data-choice="B">Select B</button>
-                </div>    </div>
+        <h2 id="trialCounter">Trial X of Y</h2>
 
+        <div id="loadingIndicator" style="text-align: center; padding: 20px; font-style: italic; display: none;">
+            Loading next trial...
+        </div>
+        <p>Listen to both samples and select your choice:</p>
+        <div class="audio-pair">
+            <div class="audio-control">
+                <p>Sample A</p>
+                <audio id="audioA"></audio>
+                <button class="playButton" data-target="audioA">Play A</button>
+                <button class="choiceButton" data-choice="A">Select A</button>
+            </div>
+            <div class="audio-control">
+                <p>Sample B</p>
+                <audio id="audioB"></audio>
+                <button class="playButton" data-target="audioB">Play B</button>
+                <button class="choiceButton" data-choice="B">Select B</button>
+            </div>
+        </div>
+    </div>
             <div id="completion" style="display: none;">
                 <h2>Experiment Complete!</h2>
                 <p>Thank you for your participation.</p>

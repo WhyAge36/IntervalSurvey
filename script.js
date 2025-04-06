@@ -12,10 +12,6 @@ const repetitions = 3;
 const totalPairs = audioPairs.length;
 const totalTrials = totalPairs * repetitions;
 
-// --- Fade Configuration ---
-const FADE_DURATION = 100; // Milliseconds for fade-out (adjust 50-200ms if needed)
-const FADE_INTERVAL = 10;  // Milliseconds between volume steps
-
 // --- State Variables ---
 let trialList = [];
 let currentTrialIndex = 0;
@@ -31,97 +27,83 @@ const trialCounterElement = document.getElementById('trialCounter');
 const audioPlayerA = document.getElementById('audioA');
 const audioPlayerB = document.getElementById('audioB');
 const playButtons = document.querySelectorAll('.playButton');
+const playButtonA = document.querySelector('.playButton[data-target="audioA"]');
+const playButtonB = document.querySelector('.playButton[data-target="audioB"]');
 const choiceButtons = document.querySelectorAll('.choiceButton');
-const feedbackElement = document.getElementById('feedback');
-const resultsOutput = document.getElementById('resultsOutput');
+const feedbackElement = document.getElementById('feedback'); // Optional
+const resultsOutput = document.getElementById('resultsOutput'); // Requires <textarea id="resultsOutput">
+const loadingIndicator = document.getElementById('loadingIndicator'); // Requires <div id="loadingIndicator">
 
-// --- Audio Handling Functions ---
+// *** ADD THESE LINES TO GET REFERENCES FOR HIDING/SHOWING UI PARTS ***
+// Note: These selectors assume the <p> and .audio-pair are direct children of #experiment.
+// Adjust selectors if your HTML structure is different, or add specific IDs to these elements in HTML.
+const listenParagraph = document.querySelector('#experiment > p');
+const audioPairDiv = document.querySelector('#experiment .audio-pair');
+// **********************************************************************
 
-// Function to Fade Out, Stop, Reset Time, Restore Volume
-// This version does NOT handle button text updates.
-function fadeOutAndStop(audioElement) {
-    // Avoid fading if already silent or already fading out
-    if (!audioElement || audioElement.volume === 0 || audioElement.isFadingOut) {
-        // Ensure it's paused and reset if needed, even if fade is skipped
-        if (!audioElement.paused) audioElement.pause();
-        if (!audioElement.isFadingOut) audioElement.currentTime = 0;
-        return;
+
+// --- Audio Handling (No Interruption Approach) ---
+
+// Function to stop (if playing) and reset audio time
+function stopAndReset(audioElement) {
+    if (!audioElement) return;
+    if (audioElement.paused === false) {
+        audioElement.pause();
     }
+    audioElement.currentTime = 0;
+}
 
-    audioElement.isFadingOut = true; // Flag to prevent multiple concurrent fades
-
-    let currentVolume = audioElement.volume;
-    const steps = FADE_DURATION / FADE_INTERVAL;
-    const volumeDecrement = steps > 0 ? (currentVolume / steps) : currentVolume;
-
-    const fadeInterval = setInterval(() => {
-        currentVolume -= volumeDecrement;
-
-        if (currentVolume <= 0) {
-            clearInterval(fadeInterval); // Stop the interval
-
-            audioElement.pause();          // Pause after fade
-            audioElement.currentTime = 0;  // Reset time
-            audioElement.volume = 1.0;       // Restore volume for next play
-            audioElement.isFadingOut = false; // Clear the flag
-            // console.log(audioElement.id + " faded out and stopped."); // Debugging
-        } else {
-            // Decrease volume smoothly
-            audioElement.volume = currentVolume;
-        }
-    }, FADE_INTERVAL);
+// Helper functions to manage Play button states
+function enablePlayButtons() {
+    if (playButtonA) playButtonA.disabled = false;
+    if (playButtonB) playButtonB.disabled = false;
+}
+function disablePlayButtons() {
+    if (playButtonA) playButtonA.disabled = true;
+    if (playButtonB) playButtonB.disabled = true;
 }
 
 // --- Event Listeners for Audio ---
+audioPlayerA.addEventListener('play', disablePlayButtons);
+audioPlayerB.addEventListener('play', disablePlayButtons);
 
-// When audio finishes NATURALLY: Just reset its time
-audioPlayerA.addEventListener('ended', () => { audioPlayerA.currentTime = 0; });
-audioPlayerB.addEventListener('ended', () => { audioPlayerB.currentTime = 0; });
-
-// --- REMOVED 'pause' event listeners - Resetting time is handled by fadeOutAndStop or the 'ended' event ---
-
-// Exclusive Playback Logic (Using Fade-Out for interruption):
-// When A starts playing:
-audioPlayerA.addEventListener('play', () => {
-    // Fade out B if it's currently playing or already fading out
-    if (!audioPlayerB.paused || audioPlayerB.isFadingOut) {
-        fadeOutAndStop(audioPlayerB); // Stop B smoothly
-    }
-    // No button text update needed
+audioPlayerA.addEventListener('ended', () => {
+    audioPlayerA.currentTime = 0;
+    enablePlayButtons();
+});
+audioPlayerB.addEventListener('ended', () => {
+    audioPlayerB.currentTime = 0;
+    enablePlayButtons();
 });
 
-// When B starts playing:
-audioPlayerB.addEventListener('play', () => {
-    // Fade out A if it's currently playing or already fading out
-    if (!audioPlayerA.paused || audioPlayerA.isFadingOut) {
-        fadeOutAndStop(audioPlayerA); // Stop A smoothly
-    }
-    // No button text update needed
-});
 
-// Custom Play Button Click Logic (Always Play from Start):
+// Custom Play Button Click Logic
 playButtons.forEach(button => {
     button.addEventListener('click', (event) => {
         const targetId = event.target.dataset.target;
         const audioElement = document.getElementById(targetId);
 
-        // Don't do anything if the element doesn't exist or is currently fading out
-        if (!audioElement || audioElement.isFadingOut) return;
-
-        // Prepare to play from the beginning
-        // Stop it abruptly first if it was already playing (though unlikely with no stop button)
-        if (!audioElement.paused) {
-             audioElement.pause();
+        if (!audioElement) {
+            console.error("Target audio element not found:", targetId);
+            return;
         }
-        audioElement.currentTime = 0;  // Reset time
-        audioElement.volume = 1.0;    // Ensure full volume
-        audioElement.play(); // Triggers the 'play' event listener which handles fading out the *other* player
+
+        // Check if ANY audio is currently playing
+        if (!audioPlayerA.paused || !audioPlayerB.paused) {
+            console.log("Cannot play " + targetId + ", another audio is already active.");
+            return; // Do nothing
+        }
+
+        // If safe: Reset time/volume and play
+        console.log("Playing " + targetId);
+        audioElement.currentTime = 0;
+        audioElement.volume = 1.0;
+        audioElement.play();
     });
 });
 
 // --- Core Experiment Functions ---
 
-// Fisher-Yates (Knuth) Shuffle Algorithm
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -129,7 +111,6 @@ function shuffleArray(array) {
     }
 }
 
-// Create the full list of trials
 function createTrialList() {
     trialList = [];
     for (let i = 0; i < repetitions; i++) {
@@ -140,30 +121,33 @@ function createTrialList() {
     console.log("Shuffled Trial List:", trialList);
 }
 
-// Load data for the current trial
 function loadTrial(trialIndex) {
+    // --- Hide Loading Indicator and Show Controls --- At the very beginning
+    console.log("loadTrial: Hiding loading, showing controls.");
+    if (loadingIndicator) loadingIndicator.style.display = 'none'; // Hide loading
+    // Safety checks added before accessing style:
+    if (listenParagraph) listenParagraph.style.display = 'block'; // Show paragraph (adjust if original wasn't block)
+    if (audioPairDiv) audioPairDiv.style.display = 'flex';    // Show audio controls (use 'flex' or 'block' as appropriate)
+    // ----------------------------------------------
+
     if (trialIndex >= totalTrials) {
         endExperiment();
         return;
     }
 
+    console.log("Loading trial content:", trialIndex + 1);
+
     const currentPair = trialList[trialIndex];
-    trialCounterElement.textContent = `Trial ${trialIndex + 1} of ${totalTrials}`;
+    if (!trialCounterElement) {
+        console.error("trialCounterElement not found!");
+    } else {
+        trialCounterElement.textContent = `Trial ${trialIndex + 1} of ${totalTrials}`;
+    }
 
-    // Ensure any previous audio/fades are fully stopped before loading new source
-    // Call pause directly might be needed if fadeOutAndStop wasn't triggered
-     if (!audioPlayerA.paused) audioPlayerA.pause();
-     audioPlayerA.currentTime = 0;
-     audioPlayerA.volume = 1.0;
-     audioPlayerA.isFadingOut = false; // Clear flag if set
+    stopAndReset(audioPlayerA);
+    stopAndReset(audioPlayerB);
+    enablePlayButtons();
 
-     if (!audioPlayerB.paused) audioPlayerB.pause();
-     audioPlayerB.currentTime = 0;
-     audioPlayerB.volume = 1.0;
-     audioPlayerB.isFadingOut = false; // Clear flag if set
-
-
-    // Counterbalancing Position
     let displayA = currentPair.fileA;
     let displayB = currentPair.fileB;
     let isSwapped = false;
@@ -171,30 +155,31 @@ function loadTrial(trialIndex) {
         [displayA, displayB] = [displayB, displayA];
         isSwapped = true;
     }
-    currentPair.isSwapped = is_swapped; // Make sure variable name matches
+    currentPair.isSwapped = isSwapped; // *** FIXED TYPO HERE ***
     currentPair.displayedFileA = displayA;
     currentPair.displayedFileB = displayB;
 
-    // Set audio sources
-    audioPlayerA.src = displayA;
-    audioPlayerB.src = displayB;
-    audioPlayerA.load();
-    audioPlayerB.load();
+    if (audioPlayerA && audioPlayerB) {
+        audioPlayerA.src = displayA;
+        audioPlayerB.src = displayB;
+        audioPlayerA.load();
+        audioPlayerB.load();
+        audioPlayerA.volume = 1.0;
+        audioPlayerB.volume = 1.0;
+    } else {
+        console.error("Audio player element(s) not found!");
+    }
 
-    // Reset UI elements
     if(feedbackElement) feedbackElement.style.visibility = 'hidden';
     choiceButtons.forEach(button => {
         button.disabled = false;
         button.style.backgroundColor = '#e0e0e0';
     });
-    playButtons.forEach(button => {
-        button.disabled = false; // Ensure play buttons are enabled
-    });
 }
 
-
-// Record the choice and move to the next trial
 function handleChoice(event) {
+    console.log("Choice handled for trial:", currentTrialIndex + 1);
+    // --- Record the choice data ---
     const chosenOption = event.target.getAttribute('data-choice');
     const currentPairData = trialList[currentTrialIndex];
 
@@ -207,26 +192,15 @@ function handleChoice(event) {
 
     console.log(`Trial ${currentTrialIndex + 1}: Chose display option ${chosenOption}. Original choice: ${originalChoice}`);
 
-    // Stop audio smoothly when choice is made
-    fadeOutAndStop(audioPlayerA);
-    fadeOutAndStop(audioPlayerB);
-
-
-    results.push({
-        participantId: participantId,
-        trialNumber: currentTrialIndex + 1,
-        pairId: currentPairData.pairId,
-        originalFileA: currentPairData.fileA,
-        originalFileB: currentPairData.fileB,
-        displayedFileA: currentPairData.displayedFileA,
-        displayedFileB: currentPairData.displayedFileB,
-        positionSwapped: currentPairData.isSwapped,
-        selectedOptionDisplayed: chosenOption,
-        selectedOptionOriginal: originalChoice,
-        timestamp: new Date().toISOString()
+    results.push({ /* ... results object details ... */
+        participantId: participantId, trialNumber: currentTrialIndex + 1, pairId: currentPairData.pairId,
+        originalFileA: currentPairData.fileA, originalFileB: currentPairData.fileB,
+        displayedFileA: currentPairData.displayedFileA, displayedFileB: currentPairData.displayedFileB,
+        positionSwapped: currentPairData.isSwapped, selectedOptionDisplayed: chosenOption,
+        selectedOptionOriginal: originalChoice, timestamp: new Date().toISOString()
     });
 
-    // Give feedback & disable choice buttons
+    // --- Update UI Immediately ---
     choiceButtons.forEach(button => {
         button.disabled = true;
         if (button.getAttribute('data-choice') === chosenOption) {
@@ -235,79 +209,109 @@ function handleChoice(event) {
             button.style.backgroundColor = '#e0e0e0';
         }
     });
-     // Disable play buttons too after choice is made
-     playButtons.forEach(button => button.disabled = true);
+    disablePlayButtons();
 
+    // --- Define function to check audio state and load next trial ---
+    function checkAudioAndLoadNextTrial() {
+        const playerAExists = !!audioPlayerA;
+        const playerBExists = !!audioPlayerB;
+        const playerAPaused = playerAExists ? audioPlayerA.paused : true;
+        const playerBPaused = playerBExists ? audioPlayerB.paused : true;
 
-    // Automatically move to the next trial after a short delay
-    setTimeout(() => {
-        currentTrialIndex++;
+        // console.log(`Checking audio state: A paused=${playerAPaused}, B paused=${playerBPaused}`);
+
+        if (playerAPaused && playerBPaused) {
+            // --- Both are paused/finished, SHOW LOADING and DELAY before loading next trial ---
+            console.log("Both players paused/stopped. Showing loading indicator.");
+            if (loadingIndicator) loadingIndicator.style.display = 'block'; // Show Loading
+            // Safety checks added:
+            if (listenParagraph) listenParagraph.style.display = 'none';    // Hide Controls
+            if (audioPairDiv) audioPairDiv.style.display = 'none';       // Hide Controls
+
+            // *** ADDED DELAY HERE ***
+            const loadingDisplayDuration = 400; // Duration in ms to show "Loading..." (Adjust if needed)
+            console.log(`Waiting ${loadingDisplayDuration}ms before loading next trial.`);
+
+            setTimeout(() => {
+                // This code runs *after* the delay
+                console.log("Loading display duration elapsed. Loading next trial.");
+                currentTrialIndex++;
+                loadTrial(currentTrialIndex); // loadTrial will hide the indicator again
+            }, loadingDisplayDuration);
+            // *** END OF ADDED DELAY ***
+
+        } else {
+            // Audio still playing, check again shortly
+            // console.log("Audio still playing. Will check again in 100ms.");
+            setTimeout(checkAudioAndLoadNextTrial, 100);
+        }
+    }
+
+    // --- Start the checking process after an initial delay ---
+    console.log("Choice made. Waiting 500ms before starting audio checks...");
+    setTimeout(checkAudioAndLoadNextTrial, 500);
+}function startExperiment() {
+    console.log("Start button clicked!");
+    if (instructionsDiv && experimentDiv && completionDiv) {
+        instructionsDiv.style.display = 'none';
+        experimentDiv.style.display = 'block';
+        completionDiv.style.display = 'none';
+
+        createTrialList();
+        currentTrialIndex = 0;
+        results = [];
         loadTrial(currentTrialIndex);
-    }, 500);
+    } else {
+         console.error("One or more main divs (instructions, experiment, completion) not found!");
+    }
 }
 
-// Start the experiment
-function startExperiment() {
-    instructionsDiv.style.display = 'none';
-    experimentDiv.style.display = 'block';
-    completionDiv.style.display = 'none';
-
-    createTrialList();
-    currentTrialIndex = 0;
-    results = [];
-    loadTrial(currentTrialIndex);
-}
-
-// End the experiment
 function endExperiment() {
-    experimentDiv.style.display = 'none';
-    completionDiv.style.display = 'block';
+    console.log("Ending experiment.");
+    if (experimentDiv && completionDiv) {
+        experimentDiv.style.display = 'none';
+        completionDiv.style.display = 'block';
+    } else {
+        console.error("Experiment or completion div not found!");
+    }
+
     console.log("Experiment Finished. Results:", results);
 
-    // Stop any potentially playing audio smoothly
-    fadeOutAndStop(audioPlayerA);
-    fadeOutAndStop(audioPlayerB);
+    stopAndReset(audioPlayerA);
+    stopAndReset(audioPlayerB);
 
-    // Display results in textarea or prepare for sending
     if(resultsOutput) {
          resultsOutput.value = JSON.stringify(results, null, 2);
     } else {
-        console.warn("resultsOutput textarea not found in HTML.");
+        console.warn("resultsOutput textarea not found in HTML to display results.");
     }
-
-    // --- TODO: Add Google Form URL generation and redirection here ---
-    // generateAndRedirectToGoogleForm(results);
+    // generateAndRedirectToGoogleForm(results); // Placeholder
 }
 
-// --- Google Form Function Placeholder ---
+// --- Google Form Function Placeholder --- (Keep commented out unless configured)
 /*
-function generateAndRedirectToGoogleForm(data) {
-    const formURL = "YOUR_GOOGLE_FORM_URL_HERE"; // Replace with your form's link
-    const entryID = "ENTRY_ID_FOR_RESULTS_FIELD_HERE"; // Replace with the entry.XXXX ID for the paragraph field
-
-    const resultsJsonString = JSON.stringify(data);
-    const encodedResults = encodeURIComponent(resultsJsonString); // Important for safe URL transfer
-
-    // Construct the URL (ensure parameter name matches your form's pre-fill link)
-    // Find the correct parameter name by manually pre-filling your form once and checking the URL
-    const submitURL = `${formURL.replace('/viewform', '')}/formResponse?entry.${entryID}=${encodedResults}`;
-
-    console.log("Redirecting to Google Form:", submitURL); // For debugging
-    window.location.href = submitURL; // Perform the redirection
-}
+function generateAndRedirectToGoogleForm(data) { ... }
 */
 
 // --- Global Event Listeners ---
 if (startButton) {
     startButton.addEventListener('click', startExperiment);
 } else {
-    console.error("Start button not found!");
+    console.error("Start button element with ID 'startButton' not found!");
 }
 
-choiceButtons.forEach(button => {
-    button.addEventListener('click', handleChoice);
-});
+if (choiceButtons && choiceButtons.length > 0) {
+    choiceButtons.forEach(button => {
+        button.addEventListener('click', handleChoice);
+    });
+} else {
+     console.warn("Choice buttons with class 'choiceButton' not found!");
+}
 
-// Note: playButtons event listeners are added further up
+if (playButtons && playButtons.length > 0) {
+    console.log("Play button listeners attached earlier."); // Listeners attached above
+} else {
+     console.warn("Play buttons with class 'playButton' not found!");
+}
 
-console.log("Script loaded. Waiting for start button.");onsole.log("Script loaded. Waiting for start button.");
+console.log("Script loaded. Event listeners should be attached if elements were found.");
