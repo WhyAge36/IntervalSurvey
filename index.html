@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Audio Comparison Experiment</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+
+        <h1>Audio Comparison Task</h1>
+
+        <div id="instructions">
+            <h2>Instructions</h2>
+            <p>Please read the instructions carefully...</p>
+            <button id="startButton">Start Experiment</button>
+        </div>
+
+        <div id="experiment" style="display: none;">
+            <h2 id="trialCounter">Trial X of Y</h2>
+            <p>Listen to both samples and select your choice:</p>
+            <div class="audio-pair">
+                <div class="audio-control">
+                    <p>Sample A</p>
+                    <audio id="audioA"></audio>
+                    <button class="playButton" data-target="audioA">Play A</button>
+                    <button class="choiceButton" data-choice="A">Select A</button>
+                </div>
+                <div class="audio-control">
+                    <p>Sample B</p>
+                    <audio id="audioB"></audio>
+                    <button class="playButton" data-target="audioB">Play B</button>
+                    <button class="choiceButton" data-choice="B">Select B</button>
+                </div>    </div>
+
+            <div id="completion" style="display: none;">
+                <h2>Experiment Complete!</h2>
+                <p>Thank you for your participation.</p>
+            </div>
+
+            <script src="script.js"></script>
+
+    </body>
+</html>

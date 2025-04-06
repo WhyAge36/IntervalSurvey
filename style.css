@@ -1,0 +1,65 @@
+body {
+    font-family: sans-serif;
+    line-height: 1.6;
+    margin: 20px;
+}
+
+#experiment, #instructions, #completion {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.audio-pair {
+    display: flex; /* Arrange A and B side-by-side */
+    justify-content: space-around; /* Space them out */
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.audio-control {
+    text-align: center;
+    padding: 10px;
+    border: 1px dashed #eee;
+    margin: 5px;
+}
+
+.audio-control p {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+audio {
+    width: 250px; /* Adjust width as needed */
+    margin-bottom: 10px;
+}
+
+button {
+    padding: 10px 15px;
+    font-size: 1em;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.choiceButton {
+    display: block; /* Make buttons take full width within their container */
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #e0e0e0;
+}
+
+.choiceButton:hover {
+    background-color: #d0d0d0;
+}
+
+#feedback {
+    color: red;
+    font-weight: bold;
+    text-align: center;
+}
+
+#resultsOutput {
+  width: 90%;
+  margin-top: 15px;
+}
