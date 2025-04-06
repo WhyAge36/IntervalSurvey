@@ -221,16 +221,94 @@ function handleChoice(event) {
     console.log("--- handleChoice finished ---");
 }
 
-function endExperiment() { /* ... same as before, use releaseAll ... */
-    console.log("Ending experiment."); if (experimentDiv && completionDiv) { experimentDiv.style.display = 'none'; completionDiv.style.display = 'block'; } else { console.error("Experiment or completion div not found!"); }
-    console.log("Experiment Finished. Results:", results);
-    // Stop any existing synth notes using CORRECT method
-    if (isToneStarted && polySynthA) polySynthA.releaseAll(Tone.now()); // *** FIXED ***
-    if (isToneStarted && polySynthB) polySynthB.releaseAll(Tone.now()); // *** FIXED ***
-    if(resultsOutput) { resultsOutput.value = JSON.stringify(results, null, 2); } else { console.warn("resultsOutput textarea not found."); }
+// --- Updated endExperiment Function (Using Fetch for Formspree) ---
+
+async function endExperiment() { // Added 'async' to use 'await' for fetch
+    console.log("Ending experiment.");
+
+    // Ensure experiment div is hidden and completion div is shown
+    if (experimentDiv && completionDiv) {
+        experimentDiv.style.display = 'none';
+        completionDiv.style.display = 'block'; // Show your 'Thank You' / Completion content
+    } else {
+        console.error("Experiment or completion div not found!");
+    }
+
+    console.log("Experiment Finished. Final Results:", results);
+
+    // Stop any existing synth notes smoothly
+    if (isToneStarted && polySynthA) polySynthA.releaseAll(Tone.now());
+    if (isToneStarted && polySynthB) polySynthB.releaseAll(Tone.now());
+
+    // --- Submit Data using Fetch to Formspree ---
+    if (results && results.length > 0) {
+        // Your specific Formspree endpoint URL
+        const FORM_ENDPOINT_URL = "https://formspree.io/f/xgvapanr";
+
+        console.log("Attempting to submit results to Formspree endpoint...");
+
+        // Optional: Update the results textarea to show submission status
+        if (resultsOutput) {
+            resultsOutput.value = "Submitting results, please wait...";
+            resultsOutput.readOnly = true; // Keep it readonly
+        }
+
+        try {
+            // 'fetch' sends the data. 'await' waits for the server's initial response.
+            const response = await fetch(FORM_ENDPOINT_URL, {
+                method: 'POST', // Use POST to send data
+                headers: {
+                    'Content-Type': 'application/json', // Tell Formspree we're sending JSON data
+                    'Accept': 'application/json' // Tell Formspree we prefer a JSON response
+                },
+                // The data payload: Convert JS object to a JSON string
+                body: JSON.stringify({
+                    participantId: participantId, // Send the generated participant ID
+                    experimentData: results // Send the entire results array (nested)
+                    // You can add more top-level fields here if needed by Formspree/you
+                    // e.g., subject: `Experiment Results ${participantId}`
+                })
+            });
+
+            // Check if the submission was successful (HTTP status 2xx)
+            if (response.ok) {
+                console.log("Results submitted successfully to Formspree!");
+                // Update UI to confirm success
+                if (resultsOutput) {
+                    // Optionally show submitted data as backup / confirmation
+                    resultsOutput.value = "Submission successful. Thank you!\n\n(Backup data below):\n" + JSON.stringify(results, null, 2);
+                }
+                // You could also update a <p> tag in your completionDiv
+                const completionMessage = completionDiv.querySelector('p'); // Find first <p>
+                if (completionMessage) completionMessage.textContent = "Submission successful. Thank you for your participation!";
+
+
+            } else {
+                // The server responded, but with an error status (e.g., 4xx, 5xx)
+                console.error("Formspree submission failed:", response.status, response.statusText);
+                const errorBody = await response.text(); // Get details if available
+                console.error("Formspree response:", errorBody);
+                alert("An error occurred while submitting your results. Please copy the data shown below and send it to the experimenter.");
+                // Show results in textarea as fallback
+                if (resultsOutput) { resultsOutput.value = "SUBMISSION FAILED. Please copy:\n\n" + JSON.stringify(results, null, 2); }
+            }
+        } catch (error) {
+            // A network error occurred (e.g., user offline, DNS issue, CORS if misconfigured)
+            console.error("Network error during results submission:", error);
+            alert("A network error occurred while submitting your results. Please copy the data shown below and send it to the experimenter.");
+            // Show results in textarea as fallback
+            if (resultsOutput) { resultsOutput.value = "SUBMISSION FAILED (Network Error). Please copy:\n\n" + JSON.stringify(results, null, 2); }
+        }
+
+    } else {
+        // No results were recorded - show appropriate message
+        console.warn("No results recorded to send.");
+        if (resultsOutput) { resultsOutput.value = "No results were recorded during this session."; }
+         const completionMessage = completionDiv.querySelector('p');
+         if (completionMessage) completionMessage.textContent = "Experiment complete. No results were recorded.";
+    }
+    // --- End data submission ---
 }
-
-
 // --- Play Button Click Logic (Using Tone.js PolySynth) ---
 playButtons.forEach(button => {
     button.addEventListener('click', (event) => {
