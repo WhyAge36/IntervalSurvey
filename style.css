@@ -118,7 +118,7 @@ button:active:not(:disabled) {
 /* Primary Button Style (Accent Background, White Text) */
 #startButton,
 .playButton {
-  background-color: var(--accent-color);
+  background-color: var(--accent-dark);
   color: var(--button-text-on-accent);
   border: 1px solid transparent; /* Add border for layout consistency, make transparent */
 }
@@ -139,7 +139,7 @@ button:active:not(:disabled) {
 
 /* Secondary Button Style (Accent Outline/Text, Transparent BG) */
 .choiceButton {
-  background-color: transparent; /* Or var(--form-bg) if preferred over body */
+  background-color: var(--form-bg); 
   border: 1px solid var(--accent-light);
   color: var(--accent-light);
 }
@@ -148,16 +148,6 @@ button:active:not(:disabled) {
   border-color: var(--accent-color);
 }
 
-
-/* Disabled Button State (Applies to ALL buttons when disabled) */
-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  background-color: var(--disabled-bg) !important;
-  color: var(--disabled-text) !important;
-  border-color: var(--disabled-bg) !important; /* Make border match bg */
-  transform: none;
-}
 
 /* Selected & Disabled Choice Button */
 /* Targets the specific green inline style JS sets - using this to identify selection */
