@@ -12,8 +12,8 @@ body {
 }
 
 .audio-pair {
-    display: flex; /* Arrange A and B side-by-side */
-    justify-content: space-around; /* Space them out */
+    display: flex;
+    justify-content: space-around;
     margin-top: 15px;
     margin-bottom: 15px;
 }
@@ -31,7 +31,7 @@ body {
 }
 
 audio {
-    width: 250px; /* Adjust width as needed */
+    width: 250px;
     margin-bottom: 10px;
 }
 
@@ -43,7 +43,7 @@ button {
 }
 
 .choiceButton {
-    display: block; /* Make buttons take full width within their container */
+    display: block;
     margin-left: auto;
     margin-right: auto;
     background-color: #e0e0e0;
