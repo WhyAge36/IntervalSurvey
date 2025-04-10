@@ -1,3 +1,14 @@
+:root {
+  --accent-color: #a050ff;
+  --accent-dark: #8030df;
+  --accent-light: #a060ff;
+  --bg-color: #121212;
+  --form-bg: #1e1e1e;
+  --text-color: #e0e0e0;
+  --input-bg: #2b2b2b;
+  --border-color: #333333;
+}
+
 body {
     font-family: sans-serif;
     line-height: 1.6;
