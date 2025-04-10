@@ -107,6 +107,7 @@ button {
   margin-top: 15px;
   transition: background-color 0.2s ease, opacity 0.2s ease, transform 0.1s ease;
   color: var(--text-color);
+  background-color: transparen;
   min-width: 120px;
 }
 button:active:not(:disabled) { /* Active state only for enabled buttons */
