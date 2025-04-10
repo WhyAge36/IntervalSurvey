@@ -157,15 +157,15 @@ button:disabled {
 
 /* Selected & Disabled Choice Button (using JS inline style - less ideal but works) */
 .choiceButton[style*="background-color: rgb(160, 208, 160)"]:disabled {
-    background-color: var(--success-bg);
+    background-color: var(--accent-dark);
     color: var(--text-color);
     opacity: 1;
-    border: 1px solid var(--accent-light);
+    border: 1px solid var(--border-color);
 }
 /* Non-Selected & Disabled Choice Button */
 .choiceButton[style*="background-color: rgb(224, 224, 224)"]:disabled {
-     background-color: var(--disabled-bg);
-     color: var(--disabled-text);
+     background-color: transparent;
+     color: var(--acctent-light);
      border: none;
 }
 
