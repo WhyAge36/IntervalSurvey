@@ -5,10 +5,11 @@
   --accent-light: #a060ff;
   --bg-color: #121212;
   --form-bg: #1e1e1e;
-  --text-color: #e0e0e0;
+  --text-color: #e0e0e0; /* Default text for body */
+  --button-text-on-accent: #ffffff; /* White text for primary buttons */
   --input-bg: #2b2b2b;
   --border-color: #333333;
-  --success-bg: #2a4a2a; /* For selected choice */
+  --selected-tint-bg: rgba(160, 80, 255, 0.15); /* Tint for selected secondary button */
   --disabled-bg: #444444;
   --disabled-text: #888888;
 }
@@ -52,7 +53,7 @@ h1 {
     color: var(--text-color);
     font-size: 1.2em;
     margin-bottom: 15px;
-    text-align: center; /* Center counter */
+    text-align: center;
 }
 
 /* Instruction paragraph within experiment */
@@ -103,72 +104,72 @@ button {
   font-weight: bold;
   border-radius: 12px;
   cursor: pointer;
-  border: none;
+  border: none; /* Base has no border */
   margin-top: 15px;
-  transition: background-color 0.2s ease, opacity 0.2s ease, transform 0.1s ease;
-  color: var(--text-color);
-  background-color: transparen;
+  transition: background-color 0.2s ease, opacity 0.2s ease, transform 0.1s ease, border-color 0.2s ease, color 0.2s ease;
   min-width: 120px;
 }
-button:active:not(:disabled) { /* Active state only for enabled buttons */
+button:active:not(:disabled) {
     transform: scale(0.98);
 }
 
-/* Start Button */
-#startButton {
+/* --- Tiered Button Styles --- */
+
+/* Primary Button Style (Accent Background, White Text) */
+#startButton,
+.playButton {
   background-color: var(--accent-color);
+  color: var(--button-text-on-accent);
+  border: 1px solid transparent; /* Add border for layout consistency, make transparent */
+}
+#startButton:hover:not(:disabled),
+.playButton:hover:not(:disabled) {
+  background-color: var(--accent-light);
+}
+#startButton { /* Specific overrides for start button */
   display: block;
   margin-left: auto;
   margin-right: auto;
   min-width: 180px;
 }
-#startButton:hover {
-  background-color: var(--accent-light);
+.playButton {
+    margin-bottom: 10px; /* Keep space */
 }
 
-/* Play/Stop Buttons */
-.playButton {
-  background-color: var(--form-bg); /* Match container background */
+
+/* Secondary Button Style (Accent Outline/Text, Transparent BG) */
+.choiceButton {
+  background-color: transparent; /* Or var(--form-bg) if preferred over body */
   border: 1px solid var(--accent-light);
   color: var(--accent-light);
-  margin-bottom: 10px; /* Space between Play and Select */
 }
-.playButton:hover:not(:disabled) { /* Hover only when enabled */
-  background-color: rgba(160, 80, 255, 0.1);
+.choiceButton:hover:not(:disabled) {
+  background-color: var(--selected-tint-bg); /* Use tint on hover */
   border-color: var(--accent-color);
 }
 
-/* Choice Buttons */
-.choiceButton {
-  background-color: var(--accent-color);
-}
-.choiceButton:hover:not(:disabled) {
-  background-color: var(--accent-light);
-}
 
-/* Disabled Button State */
+/* Disabled Button State (Applies to ALL buttons when disabled) */
 button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
-  background-color: var(--disabled-bg);
-  color: var(--disabled-text);
-  border: none; /* Ensure no border on disabled */
+  background-color: var(--disabled-bg) !important;
+  color: var(--disabled-text) !important;
+  border-color: var(--disabled-bg) !important; /* Make border match bg */
   transform: none;
 }
 
-/* Selected & Disabled Choice Button (using JS inline style - less ideal but works) */
+/* Selected & Disabled Choice Button */
+/* Targets the specific green inline style JS sets - using this to identify selection */
+/* Style should look like a disabled secondary button with a tint */
 .choiceButton[style*="background-color: rgb(160, 208, 160)"]:disabled {
-    background-color: var(--accent-dark);
-    color: var(--text-color);
-    opacity: 1;
-    border: 1px solid var(--border-color);
+    background-color: var(--selected-tint-bg) !important; /* Apply tint */
+    border-color: var(--accent-light) !important; /* Keep accent border */
+    color: var(--accent-light) !important; /* Keep accent text */
+    opacity: 0.7 !important; /* Slightly different opacity maybe? */
 }
-/* Non-Selected & Disabled Choice Button */
-.choiceButton[style*="background-color: rgb(224, 224, 224)"]:disabled {
-     background-color: transparent;
-     color: var(--acctent-light);
-     border: none;
-}
+/* Non-selected disabled choice buttons will use the default button:disabled style */
+
 
 /* Results Text Area */
 #resultsOutput {
