@@ -3,7 +3,7 @@ console.log("Script loading...");
 // --- Configuration ---
 const repetitions = 3;
 const baseFreq = 261.63; // C4 Hz
-const stimuliData = { /* ... same as before ... */
+const stimuliData = { 
     'M3_Sine_JI':  { waveform: 'sine',     frequencies: [baseFreq, baseFreq * 5/4] },
     'M3_Sine_TET': { waveform: 'sine',     frequencies: [baseFreq, baseFreq * Math.pow(2, 4/12)] },
     'M3_Tri_JI':   { waveform: 'triangle', frequencies: [baseFreq, baseFreq * 5/4] },
@@ -17,7 +17,7 @@ const stimuliData = { /* ... same as before ... */
     'P5_Saw_JI':   { waveform: 'sawtooth', frequencies: [baseFreq, baseFreq * 3/2] },
     'P5_Saw_TET':  { waveform: 'sawtooth', frequencies: [baseFreq, baseFreq * Math.pow(2, 7/12)] },
 };
-const coreConditions = [ /* ... same as before ... */
+const coreConditions = [
     { id: 'M3_Sine', interval: 'M3', waveform: 'sine' }, { id: 'M3_Tri', interval: 'M3', waveform: 'triangle' },
     { id: 'M3_Saw', interval: 'M3', waveform: 'sawtooth' }, { id: 'P5_Sine', interval: 'P5', waveform: 'sine' },
     { id: 'P5_Tri', interval: 'P5', waveform: 'triangle' }, { id: 'P5_Saw', interval: 'P5', waveform: 'sawtooth' },
@@ -35,7 +35,7 @@ let polySynthA = null;
 let polySynthB = null;
 let isSynthAPlaying = false;
 let isSynthBPlaying = false;
-let currentTrialConfigs = { /* ... initial structure ... */
+let currentTrialConfigs = { 
     configA: null, keyA: null, tuningA: null, configB: null, keyB: null, tuningB: null
 };
 
@@ -52,7 +52,7 @@ const choiceButtons = document.querySelectorAll('.choiceButton');
 const resultsOutput = document.getElementById('resultsOutput');
 
 // --- Tone.js Initialization ---
-async function initializeAudio() { /* ... same as before ... */
+async function initializeAudio() {
     if (isToneStarted) return;
     try {
         await Tone.start();
@@ -69,7 +69,7 @@ async function initializeAudio() { /* ... same as before ... */
 }
 
 // --- Helper Functions ---
-function shuffleArray(array) { /* ... same as before ... */
+function shuffleArray(array) { 
     for (let i = array.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [array[i], array[j]] = [array[j], array[i]]; } return array;
 }
 
@@ -81,10 +81,10 @@ function hasAdjacentRepeats(list) {
     for (let i = 1; i < list.length; i++) {
         // Check if current conditionId is the same as the previous one
         if (list[i].conditionId === list[i - 1].conditionId) {
-            return true; // Found a repeat!
+            return true; 
         }
     }
-    return false; // No adjacent repeats found
+    return false; 
 }
 
 function createTrialList() {
@@ -101,11 +101,9 @@ function createTrialList() {
     const maxAttempts = 1000;
 
     do {
-        // Shuffle a *copy* of the plan each time using spread (...) operator
         trialList = shuffleArray([...fullTrialPlan]);
 
         // Check if the newly shuffled list is valid (no adjacent repeats)
-        // The '!' negates the result: loop continues WHILE repeats ARE found.
         if (!hasAdjacentRepeats(trialList)) {
             console.log(`Found a valid shuffle after ${safetyCounter + 1} attempts.`);
             break; // Exit the loop, we have a valid list
@@ -115,17 +113,16 @@ function createTrialList() {
         if (safetyCounter >= maxAttempts) {
             console.warn("Could not generate a valid trial list without repeats after", maxAttempts, "attempts. Using last shuffle.");
             // Fallback: use the last shuffled list even if it has repeats.
-            // This shouldn't happen with your parameters but is good practice.
             break;
         }
 
-    } while (true); // Loop indefinitely until 'break'
+    } while (true); 
 
     console.log("Final Shuffled Trial List (No adjacent repeats):", trialList);
 }
 
 
-async function startExperiment() { /* ... same as before ... */
+async function startExperiment() { 
     console.log("Start button clicked!");
     await initializeAudio();
     if (!isToneStarted) { console.error("Cannot start experiment: AudioContext failed."); return; }
@@ -141,9 +138,8 @@ async function startExperiment() { /* ... same as before ... */
 
 function loadTrial(trialIndex) {
     console.log("--- Loading trial:", trialIndex + 1, "---");
-    // Stop any previous sounds using the CORRECT method
-    if (isToneStarted && polySynthA) polySynthA.releaseAll(Tone.now()); // *** FIXED ***
-    if (isToneStarted && polySynthB) polySynthB.releaseAll(Tone.now()); // *** FIXED ***
+    if (isToneStarted && polySynthA) polySynthA.releaseAll(Tone.now());
+    if (isToneStarted && polySynthB) polySynthB.releaseAll(Tone.now());
     isSynthAPlaying = false;
     isSynthBPlaying = false;
     // Reset button states
@@ -193,14 +189,14 @@ function handleChoice(event) {
 
     console.log(`User chose side ${chosenOption} which played ${chosenKey}`);
 
-    // Stop currently playing synth notes smoothly using CORRECT method
+    // Stop currently playing synth notes smoothly 
     console.log("Stopping synths after choice.");
-    if (isToneStarted && polySynthA) polySynthA.releaseAll(Tone.now()); // *** FIXED ***
-    if (isToneStarted && polySynthB) polySynthB.releaseAll(Tone.now()); // *** FIXED ***
+    if (isToneStarted && polySynthA) polySynthA.releaseAll(Tone.now());
+    if (isToneStarted && polySynthB) polySynthB.releaseAll(Tone.now());
     isSynthAPlaying = false; isSynthBPlaying = false;
 
     // Record results
-    results.push({ /* ... results object ... */
+    results.push({
         participantId: participantId, trialNumber: currentTrialIndex + 1, conditionId: conditionId,
         sideA_stimulus: keyA, sideB_stimulus: keyB, sideA_tuning: tuningA, sideB_tuning: tuningB,
         userChoice: chosenOption, chosenStimulus: chosenKey, chosenTuning: chosenTuning,
@@ -209,12 +205,12 @@ function handleChoice(event) {
     console.log("Results so far:", results.length);
 
     // Update UI Immediately (Disable buttons)
-    choiceButtons.forEach(button => { /* ... disable/style choice buttons ... */
+    choiceButtons.forEach(button => {
         button.disabled = true; if (button.getAttribute('data-choice') === chosenOption) { button.style.backgroundColor = '#a0d0a0'; } else { button.style.backgroundColor = '#e0e0e0'; }
     });
     if (playButtonA) playButtonA.disabled = true; if (playButtonB) playButtonB.disabled = true;
 
-    // Load next trial after a fixed delay
+
     const nextTrialDelay = 500; // ms
     console.log(`Waiting ${nextTrialDelay}ms to load next trial.`);
     setTimeout(() => { currentTrialIndex++; loadTrial(currentTrialIndex); }, nextTrialDelay);
@@ -223,13 +219,13 @@ function handleChoice(event) {
 
 // --- Updated endExperiment Function (Using Fetch for Formspree) ---
 
-async function endExperiment() { // Added 'async' to use 'await' for fetch
+async function endExperiment() {
     console.log("Ending experiment.");
 
     // Ensure experiment div is hidden and completion div is shown
     if (experimentDiv && completionDiv) {
         experimentDiv.style.display = 'none';
-        completionDiv.style.display = 'block'; // Show your 'Thank You' / Completion content
+        completionDiv.style.display = 'block'; 
     } else {
         console.error("Experiment or completion div not found!");
     }
@@ -247,7 +243,7 @@ async function endExperiment() { // Added 'async' to use 'await' for fetch
 
         console.log("Attempting to submit results to Formspree endpoint...");
 
-        // Optional: Update the results textarea to show submission status
+        // Update the results textarea to show submission status
         if (resultsOutput) {
             resultsOutput.value = "Submitting results, please wait...";
             resultsOutput.readOnly = true; // Keep it readonly
@@ -258,15 +254,13 @@ async function endExperiment() { // Added 'async' to use 'await' for fetch
             const response = await fetch(FORM_ENDPOINT_URL, {
                 method: 'POST', // Use POST to send data
                 headers: {
-                    'Content-Type': 'application/json', // Tell Formspree we're sending JSON data
-                    'Accept': 'application/json' // Tell Formspree we prefer a JSON response
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
                 },
                 // The data payload: Convert JS object to a JSON string
                 body: JSON.stringify({
-                    participantId: participantId, // Send the generated participant ID
-                    experimentData: results // Send the entire results array (nested)
-                    // You can add more top-level fields here if needed by Formspree/you
-                    // e.g., subject: `Experiment Results ${participantId}`
+                    participantId: participantId, 
+                    experimentData: results
                 })
             });
 
@@ -278,7 +272,7 @@ async function endExperiment() { // Added 'async' to use 'await' for fetch
                     // Optionally show submitted data as backup / confirmation
                     resultsOutput.value = "Submission successful. Thank you!\n\n(Backup data below):\n" + JSON.stringify(results, null, 2);
                 }
-                // You could also update a <p> tag in your completionDiv
+                // update a <p> tag in your completionDiv
                 const completionMessage = completionDiv.querySelector('p'); // Find first <p>
                 if (completionMessage) completionMessage.textContent = "Submission successful. Thank you for your participation!";
 
@@ -319,9 +313,9 @@ playButtons.forEach(button => {
         const clickedButton = event.target;
         let targetSynth, otherSynth, isTargetPlaying, isOtherPlaying, otherButton, targetConfig;
 
-        if (targetId === 'audioA') { /* ... assign A vars ... */
+        if (targetId === 'audioA') {
             targetSynth = polySynthA; otherSynth = polySynthB; isTargetPlaying = isSynthAPlaying; isOtherPlaying = isSynthBPlaying; otherButton = playButtonB; targetConfig = currentTrialConfigs.configA;
-        } else { /* ... assign B vars ... */
+        } else {
             targetSynth = polySynthB; otherSynth = polySynthA; isTargetPlaying = isSynthBPlaying; isOtherPlaying = isSynthAPlaying; otherButton = playButtonA; targetConfig = currentTrialConfigs.configB;
         }
 
@@ -333,8 +327,7 @@ playButtons.forEach(button => {
         if (isTargetPlaying) {
             // === ACTION: STOP ===
             console.log("Stopping " + targetId);
-            // Use CORRECT method for stopping PolySynth voices
-            targetSynth.releaseAll(Tone.now()); // *** FIXED ***
+            targetSynth.releaseAll(Tone.now());
 
             if (targetId === 'audioA') isSynthAPlaying = false; else isSynthBPlaying = false;
             clickedButton.textContent = (targetId === 'audioA') ? 'Play A' : 'Play B';
@@ -347,8 +340,7 @@ playButtons.forEach(button => {
             if (isOtherPlaying) {
                 const otherId = (targetId === 'audioA') ? 'audioB' : 'audioA';
                 console.log("Stopping other sound first: " + otherId);
-                // Use CORRECT method for stopping PolySynth voices
-                otherSynth.releaseAll(Tone.now()); // *** FIXED ***
+                otherSynth.releaseAll(Tone.now());
 
                 if (otherId === 'audioA') isSynthAPlaying = false; else isSynthBPlaying = false;
                 if (otherButton) otherButton.textContent = (otherId === 'audioA') ? 'Play A' : 'Play B';
@@ -369,10 +361,10 @@ playButtons.forEach(button => {
 
 
 // --- Global Event Listeners ---
-if (startButton) { /* ... listener ... */ startButton.addEventListener('click', startExperiment); }
+if (startButton) { startButton.addEventListener('click', startExperiment); }
 else { console.error("Start button not found!"); }
 
-if (choiceButtons && choiceButtons.length > 0) { /* ... listeners ... */ choiceButtons.forEach(button => { button.addEventListener('click', handleChoice); }); }
+if (choiceButtons && choiceButtons.length > 0) { choiceButtons.forEach(button => { button.addEventListener('click', handleChoice); }); }
 else { console.warn("Choice buttons not found!"); }
 
 if (playButtons && playButtons.length > 0) { console.log("Play button listeners attached."); }
