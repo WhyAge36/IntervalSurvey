@@ -65,7 +65,7 @@ h1 {
 
 /* Base Button Styles */
 button {
-  padding: 12px 22px; /* Standard padding */
+  padding: 12px 22px;
   font-size: 1em;
   font-weight: bold;
   border-radius: 12px;
@@ -73,38 +73,34 @@ button {
   border: none;
   margin-top: 15px;
   transition: background-color 0.2s ease, opacity 0.2s ease, transform 0.1s ease, border-color 0.2s ease, color 0.2s ease;
-  /* min-width removed from base */
+  min-width: 120px;
 }
 button:active:not(:disabled) {
     transform: scale(0.98);
 }
 
-/* --- Layout Containers --- */
-
+/* Layout Containers */
 .play-controls {
     display: flex;
     justify-content: center;
     gap: 20px;
     margin-bottom: 25px;
 }
-
 .segmented-picker {
     display: flex;
-    justify-content: center; /* Center the group of buttons */
-    gap: 10px; /* Increased gap between picker buttons */
+    justify-content: center;
+    gap: 10px;
     margin-bottom: 25px;
     max-width: 450px;
     margin-left: auto;
     margin-right: auto;
-    /* Removed border/padding for grouping */
 }
-
 .submit-area {
     text-align: center;
     margin-top: 10px;
 }
 
-/* --- Tiered Button Styles --- */
+/* Tiered Button Styles */
 
 /* Primary Button Style */
 #startButton,
@@ -113,7 +109,7 @@ button:active:not(:disabled) {
   background-color: var(--accent-color);
   color: var(--button-text-on-accent);
   border: 1px solid transparent;
-  min-width: 120px; /* Apply min-width here */
+  min-width: 130px;
 }
 #startButton:hover:not(:disabled),
 .playButton:hover:not(:disabled),
@@ -121,20 +117,18 @@ button:active:not(:disabled) {
   background-color: var(--accent-light);
 }
 #startButton,
-#submitChoiceButton { /* Specific overrides for larger buttons */
+#submitChoiceButton {
   min-width: 180px;
 }
 
 /* Secondary Button Style (Picker Buttons) */
 .picker-button {
-  /* flex: 1; */ /* REMOVED - stops stretching */
   background-color: transparent;
   border: 1px solid var(--accent-light);
   color: var(--accent-light);
   margin: 0;
   border-radius: 8px;
-  padding: 12px 22px; /* *** UPDATED: Match base button padding *** */
-  /* Width will now be determined by content + padding */
+  padding: 12px 22px;
 }
 .picker-button:hover:not(:disabled):not(.selected) {
   background-color: rgba(160, 80, 255, 0.05);
@@ -155,17 +149,15 @@ button:disabled {
   border-color: var(--disabled-bg) !important;
   transform: none;
 }
-/* Selected & Disabled Choice Button */
-.picker-button.selected:disabled { /* Simpler selector targeting class + disabled state */
-    background-color: var(--selected-tint-bg) !important; /* Keep tint */
-    border-color: var(--accent-light) !important; /* Keep border color */
-    color: var(--accent-light) !important; /* Keep text color */
-    opacity: 0.6 !important; /* Apply standard disabled opacity */
+.picker-button.selected:disabled {
+    background-color: var(--selected-tint-bg) !important;
+    border-color: var(--accent-light) !important;
+    color: var(--accent-light) !important;
+    opacity: 0.6 !important; /* Match standard disabled opacity */
 }
 
-
 /* Results Text Area */
-#resultsOutput { /* Unchanged */
+#resultsOutput {
   width: 100%;
   margin-top: 15px;
   padding: 10px;
@@ -181,7 +173,7 @@ button:disabled {
 }
 
 /* Accessibility helper */
-.visually-hidden { /* Unchanged */
+.visually-hidden {
     position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
     overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
 }
