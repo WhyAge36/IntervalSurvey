@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Audio Comparison Experiment</title>
         <link rel="stylesheet" href="style.css">
+        <script src="https://unpkg.com/tone"></script>
     </head>
     <body>
 
@@ -12,38 +13,42 @@
 
         <div id="instructions">
             <h2>Instructions</h2>
-            <p>Please read the instructions carefully...</p>
+            <p>Welcome! This experiment involves listening carefully to pairs of musical intervals.</p>
+            <p>Please ensure you are using headphones and are in a quiet place.</p>
+            <p>In each trial, use the "Play A" and "Play B" buttons to listen to the two sounds. You can play them as many times as you like and switch between them.</p>
+            <p>Once you have decided, select whether you preferred sound 'A', sound 'B', or if you perceived 'No Difference', using the selection buttons below. Then click 'Submit Choice' to proceed.</p>
             <button id="startButton">Start Experiment</button>
         </div>
 
         <div id="experiment" style="display: none;">
-        <h2 id="trialCounter">Trial X of Y</h2>
+            <h2 id="trialCounter">Trial X of Y</h2>
+            <p>Listen to the sounds and make your selection:</p>
 
-        <div id="loadingIndicator" style="text-align: center; padding: 20px; font-style: italic; display: none;">
-            Loading next trial...
+            <div class="play-controls">
+                <button type="button" class="playButton" data-target="audioA">Play A</button>
+                <button type="button" class="playButton" data-target="audioB">Play B</button>
+            </div>
+
+            <div class="segmented-picker" role="radiogroup" aria-labelledby="pickerLabel">
+                 <span id="pickerLabel" class="visually-hidden">Select your choice: A, No Difference, or B</span>
+                 <button type="button" class="picker-button" data-choice="A">A</button>
+                 <button type="button" class="picker-button" data-choice="None">No Difference</button>
+                 <button type="button" class="picker-button" data-choice="B">B</button>
+            </div>
+
+            <div class="submit-area">
+                <button type="button" id="submitChoiceButton" disabled>Submit Choice</button>
+            </div>
+
         </div>
-        <p>Listen to both samples and select your choice:</p>
-        <div class="audio-pair">
-            <div class="audio-control">
-                <p>Sample A</p>
-                <audio id="audioA"></audio>
-                <button class="playButton" data-target="audioA">Play A</button>
-                <button class="choiceButton" data-choice="A">Select A</button>
-            </div>
-            <div class="audio-control">
-                <p>Sample B</p>
-                <audio id="audioB"></audio>
-                <button class="playButton" data-target="audioB">Play B</button>
-                <button class="choiceButton" data-choice="B">Select B</button>
-            </div>
+
+        <div id="completion" style="display: none;">
+            <h2>Experiment Complete!</h2>
+            <p>Thank you for your participation.</p>
+            <textarea id="resultsOutput" rows="10" cols="50" readonly></textarea>
         </div>
-    </div>
-            <div id="completion" style="display: none;">
-                <h2>Experiment Complete!</h2>
-                <p>Thank you for your participation.</p>
-            </div>
-            <script src="https://unpkg.com/tone"></script>
-            <script src="script.js"></script>
+
+        <script src="script.js"></script>
 
     </body>
 </html>
