@@ -15,8 +15,11 @@
             <p><strong>WICHTIG:</strong> Für genaue Ergebnisse und das beste Erlebnis, stelle bitte sicher, dass du während des gesamten Experiments Kopfhörer trägst und dich an einem ruhigen Ort befindest.</p>
             <p>In jedem Durchgang hörst du zwei Klänge (A und B), die du mit den "A abspielen" und "B abspielen" Knöpfen starten und stoppen kannst. Du kannst sie so oft anhören und zwischen ihnen wechseln, wie du möchtest.</p>
             <p>Wenn du dich entschieden hast, wähle bitte aus, ob du Klang 'A' oder Klang 'B' bevorzugt hast (oder einen anderen Vergleich machst) oder ob du 'Kein Unterschied' wahrgenommen hast. Klicke dann auf 'Auswahl bestätigen', um fortzufahren.</p>
-            {/* Optional: Add headphone confirmation checkbox here if desired */}
-            <button id="startButton">Experiment starten</button>
+            <div class="headphone-check">
+                 <input type="checkbox" id="headphoneConfirmCheckbox" name="headphoneConfirm">
+                 <label for="headphoneConfirmCheckbox">Ich bestätige, dass ich Kopfhörer trage.</label>
+            </div>
+            <button id="startButton" disabled>Experiment starten</button>
         </div>
 
         <div id="experiment" style="display: none;">

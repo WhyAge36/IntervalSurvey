@@ -50,6 +50,7 @@ const playButtonB = document.querySelector('.playButton[data-target="audioB"]');
 const resultsOutput = document.getElementById('resultsOutput');
 const pickerButtons = document.querySelectorAll('.picker-button');
 const submitChoiceButton = document.getElementById('submitChoiceButton');
+const headphoneCheckbox = document.getElementById('headphoneConfirmCheckbox'); 
 
 // --- Tone.js Initialization ---
 async function initializeAudio() {
@@ -251,5 +252,21 @@ if (pickerButtons && pickerButtons.length > 0) {
 // Attach listener to Submit button
 if (submitChoiceButton) { submitChoiceButton.addEventListener('click', handleSubmitChoice); }
 else { console.error("Submit Choice button not found!"); }
+
+if (headphoneCheckbox && startButton) {
+    // Ensure start button is disabled initially, matching the HTML attribute
+    startButton.disabled = true;
+
+    // Listen for changes ('change' event) on the checkbox
+    headphoneCheckbox.addEventListener('change', () => {
+        // Enable the startButton only if the checkbox IS checked
+        // Otherwise, disable it.
+        startButton.disabled = !headphoneCheckbox.checked;
+    });
+} else {
+    // Add warnings if elements needed for this feature are missing
+    if (!headphoneCheckbox) console.warn("Headphone confirmation checkbox with ID 'headphoneConfirmCheckbox' not found!");
+    if (!startButton) console.warn("Start button not found, cannot link headphone check."); // Already have error log elsewhere
+}
 
 console.log("Script loaded. Event listeners should be attached if elements were found.");

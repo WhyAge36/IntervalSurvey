@@ -106,7 +106,7 @@ button:active:not(:disabled) {
 #startButton,
 .playButton,
 #submitChoiceButton {
-  background-color: var(--accent-color);
+  background-color: var(--accent-dark);
   color: var(--button-text-on-accent);
   border: 1px solid transparent;
   min-width: 130px;
@@ -153,7 +153,20 @@ button:disabled {
     background-color: var(--selected-tint-bg) !important;
     border-color: var(--accent-light) !important;
     color: var(--accent-light) !important;
-    opacity: 0.6 !important; /* Match standard disabled opacity */
+    opacity: 0.6 !important; 
+}
+
+.headphone-check {
+    margin-top: 25px;
+    margin-bottom: 15px;
+    font-size: 0.95em;
+}
+
+input[type="checkbox"]#headphoneConfirmCheckbox {
+  accent-color: var(--accent-color);
+  width: 18px;
+  height: 18px;
+  vertical-align: middle; 
 }
 
 /* Results Text Area */
