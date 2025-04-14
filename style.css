@@ -374,3 +374,34 @@ button:disabled {
     width: 24px;
     height: 24px;
 }
+
+/* --- Responsive Adjustments --- */
+
+/* Apply styles when screen width is 500px or less */
+@media (max-width: 500px) {
+    /* Make the picker buttons stack vertically */
+    .segmented-picker {
+        flex-direction: column; /* Stack items top-to-bottom */
+        align-items: stretch; /* Make buttons stretch to container width */
+        max-width: 90%; /* Allow picker to take more width */
+        gap: 8px; /* Adjust gap for vertical spacing */
+    }
+
+    .picker-button {
+        width: 100%; /* Make each button take full width */
+        box-sizing: border-box; /* Include padding/border in width */
+        margin: 0; /* Reset margin if any was added */
+        min-width: auto; /* Reset min-width if needed */
+    }
+
+    .play-controls {
+        gap: 10px;
+    }
+
+    #instructions,
+    #experiment,
+    #completion,
+    #experienceForm {
+        padding: 20px 15px;
+    }
+}
