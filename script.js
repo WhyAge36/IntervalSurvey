@@ -57,6 +57,12 @@ const coreConditions = [
 ];
 const totalConditions = coreConditions.length;
 const totalTrials = totalConditions * repetitions;
+const baseSynthVolume = -9;
+const waveformVolumeAdjustments = {
+  sawtooth: -6,
+  triangle: -2,
+  sine: 0,
+};
 
 // --- State Variables ---
 let trialList = [];
@@ -108,9 +114,8 @@ async function initializeAudio() {
     isToneStarted = true;
     const synthOptions = {
       polyphony: 2,
-      volume: -9,
       oscillator: { type: "sine" },
-      envelope: { attack: 0.01, decay: 0.1, sustain: 0.5, release: 0.2 },
+      envelope: { attack: 0.01, decay: 0.1, sustain: 1, release: 0.05 },
     };
     polySynthA = new Tone.PolySynth(Tone.Synth, synthOptions).toDestination();
     polySynthB = new Tone.PolySynth(Tone.Synth, synthOptions).toDestination();
@@ -679,7 +684,14 @@ playButtons.forEach((button) => {
         }
       }
       // Configure and Play Target
-      targetSynth.set({ oscillator: { type: targetConfig.waveform } });
+      const waveformType = targetConfig.waveform;
+      const volumeAdjustment = waveformVolumeAdjustments[waveformType] || 0; // Get adjustment or default to 0
+      const finalVolumeDb = baseSynthVolume + volumeAdjustment;
+      console.log(
+        `Setting volume for <span class="math-inline">\{targetId\} \(</span>{waveformType}) to ${finalVolumeDb} dB`,
+      );
+      targetSynth.set({ volume: finalVolumeDb });
+      targetSynth.set({ oscillator: { type: waveformType } });
       targetSynth.triggerAttack(targetConfig.frequencies, Tone.now());
       if (targetId === "audioA") {
         isSynthAPlaying = true;
