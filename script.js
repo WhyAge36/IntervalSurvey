@@ -139,33 +139,63 @@ function loadTrial(trialIndex) {
 }
 
 function handleSubmitChoice() {
+    console.log("--- Submit button clicked ---");
     if (currentSelection === null) {
-        alert("Bitte wähle A, B oder 'Kein Unterschied' aus, bevor du bestätigst."); return;
+        alert("Bitte wähle A, B oder 'Kein Unterschied' aus, bevor du bestätigst.");
+        return;
     }
+    console.log(`Submitting choice: ${currentSelection}`);
 
+    // Stop Audio
     if (isToneStarted && polySynthA) polySynthA.releaseAll(Tone.now());
     if (isToneStarted && polySynthB) polySynthB.releaseAll(Tone.now());
-    isSynthAPlaying = false; isSynthBPlaying = false;
+    isSynthAPlaying = false;
+    isSynthBPlaying = false;
 
-    const { keyA, tuningA, keyB, tuningB } = currentTrialConfigs;
-    if (!keyA || !keyB) { console.error("Cannot record result: Trial config missing keys."); return; }
+    // --- Record results (Re-adding chosenTuning) ---
+    const { keyA, tuningA, keyB, tuningB } = currentTrialConfigs; // Get tunings for side A and B
+    if (!keyA || !keyB || !tuningA || !tuningB) {
+        console.error("Cannot record result: Trial config missing keys or tunings.");
+        return;
+    }
     const conditionId = keyA.substring(0, keyA.lastIndexOf('_'));
-    let chosenKey = null; let chosenTuning = null;
-    if (currentSelection === 'A') { chosenKey = keyA; chosenTuning = tuningA; }
-    else if (currentSelection === 'B') { chosenKey = keyB; chosenTuning = tuningB; }
 
+    // *** Determine chosenTuning based on userChoice (currentSelection) ***
+    let chosenTuning = null; // Default to null
+    if (currentSelection === 'A') {
+        chosenTuning = tuningA; // If they chose A, store the tuning of side A
+    } else if (currentSelection === 'B') {
+        chosenTuning = tuningB; // If they chose B, store the tuning of side B
+    }
+    // If currentSelection is 'None', chosenTuning remains null
+    // *** ----------------------------------------------------------- ***
+
+    // Push the results object including chosenTuning
     results.push({
-        participantId, trialNumber: currentTrialIndex + 1, conditionId,
-        sideA_stimulus: keyA, sideB_stimulus: keyB, sideA_tuning: tuningA, sideB_tuning: tuningB,
-        userChoice: currentSelection, chosenStimulus: chosenKey, chosenTuning: chosenTuning,
+        participantId: participantId,
+        trialNumber: currentTrialIndex + 1,
+        conditionId: conditionId,
+        sideA_tuning: tuningA,    // Still useful to know what was presented
+        sideB_tuning: tuningB,    // Still useful to know what was presented
+        userChoice: currentSelection, // Still useful for raw response pattern
+        chosenTuning: chosenTuning, 
         timestamp: new Date().toISOString()
     });
+    console.log("Results so far:", results.length);
 
-    if (playButtonA) playButtonA.disabled = true; if (playButtonB) playButtonB.disabled = true;
-    pickerButtons.forEach(btn => btn.disabled = true); if (submitChoiceButton) submitChoiceButton.disabled = true;
+    // Disable all buttons
+    if (playButtonA) playButtonA.disabled = true;
+    if (playButtonB) playButtonB.disabled = true;
+    pickerButtons.forEach(btn => btn.disabled = true);
+    if (submitChoiceButton) submitChoiceButton.disabled = true;
 
+    // Load next trial after delay
     const nextTrialDelay = 500;
-    setTimeout(() => { currentTrialIndex++; loadTrial(currentTrialIndex); }, nextTrialDelay);
+    setTimeout(() => {
+        currentTrialIndex++;
+        loadTrial(currentTrialIndex);
+    }, nextTrialDelay);
+    console.log("--- handleSubmitChoice finished ---");
 }
 
 async function endExperiment() {
