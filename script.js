@@ -94,7 +94,6 @@ const trialCounterElement = document.getElementById("trialCounter");
 const playButtons = document.querySelectorAll(".playButton");
 const playButtonA = document.querySelector('.playButton[data-target="audioA"]');
 const playButtonB = document.querySelector('.playButton[data-target="audioB"]');
-const resultsOutput = document.getElementById("resultsOutput");
 const pickerButtons = document.querySelectorAll(".picker-button");
 const submitChoiceButton = document.getElementById("submitChoiceButton");
 const headphoneCheckbox = document.getElementById("headphoneConfirmCheckbox");
@@ -293,11 +292,6 @@ function handleSubmissionError(response, payload) {
   alert(
     "Fehler beim Senden der Ergebnisse. Bitte kopiere die Daten aus dem Textfeld unten und sende sie an den Versuchsleiter.",
   );
-  if (resultsOutput) {
-    resultsOutput.value =
-      "SENDEN FEHLGESCHLAGEN. Bitte kopieren:\n\n" +
-      JSON.stringify(payload, null, 2);
-  }
   if (completionDiv) completionDiv.style.display = "block";
   const completionMessage = completionDiv.querySelector("p");
   if (completionMessage)
@@ -310,11 +304,6 @@ function handleNetworkError(error, payload) {
   alert(
     "Netzwerkfehler beim Senden der Ergebnisse. Bitte kopiere die Daten aus dem Textfeld unten und sende sie an den Versuchsleiter.",
   );
-  if (resultsOutput) {
-    resultsOutput.value =
-      "SENDEN FEHLGESCHLAGEN (Netzwerkfehler). Bitte kopieren:\n\n" +
-      JSON.stringify(payload, null, 2);
-  }
   if (completionDiv) completionDiv.style.display = "block";
   const completionMessage = completionDiv.querySelector("p");
   if (completionMessage)
@@ -540,11 +529,6 @@ async function endExperiment() {
     : null;
   if (completionMessage)
     completionMessage.textContent = "Sende finale Daten...";
-  if (resultsOutput) {
-    resultsOutput.value = "Sende finale Daten...";
-    resultsOutput.readOnly = true;
-  }
-
   console.log("Final Trial Results:", results);
   console.log("Final Experience Data:", collectedExperienceData);
 
@@ -595,12 +579,6 @@ async function endExperiment() {
         if (completionMessage)
           completionMessage.textContent =
             "Übermittlung erfolgreich. Vielen Dank für deine Teilnahme!";
-        // Show the JSON string that was sent in the backup textarea
-        if (resultsOutput) {
-          resultsOutput.value =
-            "Daten erfolgreich gesendet.\n\n(Backup Daten unten):\n" +
-            allDataJsonString;
-        }
       } else {
         // Pass the object used to generate the string to the error handler for backup display
         handleSubmissionError(response, allExperimentData); // Pass original object for backup
@@ -611,9 +589,6 @@ async function endExperiment() {
     }
   } else {
     console.warn("No results or experience data recorded to send.");
-    if (resultsOutput) {
-      resultsOutput.value = "Keine Ergebnisse aufgenommen.";
-    }
     if (completionMessage)
       completionMessage.textContent =
         "Experiment abgeschlossen. Keine Ergebnisse aufgenommen.";
