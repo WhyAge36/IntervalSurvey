@@ -91,6 +91,32 @@
         </div>
 
         <div id="experienceForm" style="display: none">
+            <div class="form-group">
+                <label for="ageInput">Alter:</label>
+                <input type="number" id="ageInput" name="age" min="10" max="120" placeholder="z.B. 25" required>
+            </div>
+
+            <div class="form-group">
+                <label>Geschlecht:</label> {/* Group label */}
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input type="radio" id="genderFemale" name="gender" value="Weiblich" required>
+                        <label for="genderFemale">Weiblich</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="genderMale" name="gender" value="Männlich">
+                        <label for="genderMale">Männlich</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="genderDiverse" name="gender" value="Divers">
+                        <label for="genderDiverse">Divers</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="genderPreferNo" name="gender" value="Keine Angabe">
+                        <label for="genderPreferNo">Keine Angabe</label>
+                    </div>
+                </div>
+            </div>
             <h2>Musikalische Erfahrung</h2>
             <form id="musicForm">
                 <p>Welche musikalischen Erfahrungen hast du? Gib die Instrumente an, 
