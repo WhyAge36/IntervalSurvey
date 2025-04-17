@@ -24,6 +24,63 @@ body {
     line-height: 1.6;
 }
 
+/* --- Added Styles for Age/Gender Form Groups --- */
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-group label { 
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: var(--accent-light);
+}
+
+
+#experienceForm input[type="number"] {
+  padding: 8px 10px;
+  font-size: 1em;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  box-sizing: border-box;
+  height: 42px;
+  line-height: normal;
+  width: 100px;
+  min-width: 80px;
+  flex: none;
+}
+
+.radio-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 20px; /* Row gap, Column gap */
+}
+
+.radio-option {
+    display: flex;
+    align-items: center;
+    margin-right: 15px; /* Spacing between options */
+}
+
+.radio-option input[type="radio"] {
+   margin-right: 6px;
+   accent-color: var(--accent-color);
+   width: 16px;
+   height: 16px;
+   cursor: pointer;
+}
+
+.radio-option label {
+    margin-bottom: 0;
+    font-weight: normal;
+    color: var(--text-color);
+    cursor: pointer;
+}
+
 /* --- Custom Checkbox Styling --- */
 
 .headphone-check {
