@@ -487,31 +487,81 @@ function handleSubmitChoice() {
 }
 
 // --- Function triggered by the Submit EXPERIENCE Button ---
+// --- Function triggered by the Submit EXPERIENCE Button ---
 async function handleExperienceSubmitAndStartTrials() {
-  console.log("--- submitExperienceButton clicked ---");
-  const experienceData = collectExperienceData();
-  console.log("Collected Experience Data:", experienceData);
-  collectedExperienceData = experienceData; // Store globally
+    console.log("--- submitExperienceButton clicked ---");
 
-  // Hide form, Show experiment
-  if (experienceFormDiv) experienceFormDiv.style.display = "none";
-  if (experimentDiv) experimentDiv.style.display = "block";
-  else {
-    console.error("Experiment Div not found! Cannot start trials.");
-    return;
-  }
+    // --- Step 1: Collect Experience Data ---
 
-  // Initialize and Start the Main Experiment Trials
-  console.log("Starting main experiment trials...");
-  createTrialList();
-  currentTrialIndex = 0;
-  results = [];
-  isSynthAPlaying = false;
-  isSynthBPlaying = false;
-  currentSelection = null;
-  loadTrial(currentTrialIndex);
+    // *** ADDED CODE START: Get Age and Gender ***
+    let age = null;
+    let gender = null;
+    const ageInput = document.getElementById('ageInput');
+    const selectedGenderRadio = document.querySelector('input[name="gender"]:checked');
+
+    // Basic validation for age (required)
+    if (!ageInput || !ageInput.value) { // Check if input exists and has a value
+        alert("Bitte gib dein Alter an.");
+        return; // Stop submission
+    }
+    // More detailed age validation
+    if (ageInput) {
+         const ageValue = parseInt(ageInput.value);
+         const minAge = parseInt(ageInput.min) || 10; // Use min from HTML or default to 10
+         const maxAge = parseInt(ageInput.max) || 120; // Use max from HTML or default to 120
+         if (isNaN(ageValue) || ageValue < minAge || ageValue > maxAge) {
+              alert(`Bitte gib ein gültiges Alter zwischen ${minAge} und ${maxAge} ein.`);
+              return; // Stop submission
+         }
+         age = ageValue; // Store valid age as number
+    }
+
+    // Basic validation for gender (required)
+    const genderRadios = document.getElementsByName('gender');
+    let isGenderRequired = false;
+    // Check if the required attribute exists on the first radio button of the group
+    if(genderRadios.length > 0 && genderRadios[0].hasAttribute('required')) {
+        isGenderRequired = true;
+    }
+    if (selectedGenderRadio) {
+        gender = selectedGenderRadio.value; // Get value if one is checked
+    } else if (isGenderRequired) {
+        // If required and none is checked, alert user
+        alert("Bitte wähle eine Option für Geschlecht aus.");
+        return; // Stop submission
+    }
+    // If not required and none selected, gender remains null
+
+    console.log("Collected Age:", age);
+    console.log("Collected Gender:", gender);
+    // *** ADDED CODE END ***
+
+
+    // --- Get Instrument Data ---
+    const instrumentData = collectExperienceData(); // Call existing helper
+    console.log("Collected Instrument Data:", instrumentData);
+
+
+    // *** MODIFIED: Store combined experience data globally ***
+    collectedExperienceData = {
+        age: age, // Include collected age
+        gender: gender, // Include collected gender
+        instruments: instrumentData // Include instrument array
+    };
+    // *** ---------------------------------------------- ***
+
+
+    // --- Step 2: Hide form, Show experiment ---
+    if (experienceFormDiv) experienceFormDiv.style.display = "none";
+    if (experimentDiv) experimentDiv.style.display = "block";
+    else { console.error("Experiment Div not found! Cannot start trials."); return; }
+
+    // --- Step 3: Initialize and Start the Main Experiment Trials ---
+    console.log("Starting main experiment trials...");
+    createTrialList(); currentTrialIndex = 0; results = [];
+    isSynthAPlaying = false; isSynthBPlaying = false; currentSelection = null;
+    loadTrial(currentTrialIndex);
 }
-
 // --- Function called when trials end (before experience form was shown) ---
 async function endExperiment() {
   console.log("Ending experiment, preparing final submission.");
