@@ -473,11 +473,8 @@ button:disabled {
         --input-bg: #f0f0f0;       /* Slightly off-white input background */
         --border-color: #cccccc;   /* Lighter border */
 
-        /* Accent colors MIGHT need adjustment for contrast, test carefully */
-        /* --accent-color: #9040ef; /* Slightly adjusted? */ */
-        /* --accent-dark: #7020cf; /* Slightly adjusted? */ */
-        /* --accent-light: #a060ff; /* Keep or adjust */ */
-        /* --button-text-on-accent: #ffffff; /* White usually still works */ */
+        --accent-dark: #a060ff;
+        --accent-light: #8030df;
 
         --selected-tint-bg: rgba(160, 80, 255, 0.08); /* Maybe lighter tint */
         --disabled-bg: #e0e0e0;       /* Light gray disabled background */
@@ -490,4 +487,10 @@ button:disabled {
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Lighter shadow */
         border-color: #e0e0e0; /* Even lighter border for containers */
     }
+     #experienceForm select,
+        #experienceForm input[type="text"],
+        #experienceForm input[type="number"],
+        #resultsOutput {
+            background-color: #ffffff; 
+        }
 }
