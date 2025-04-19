@@ -499,56 +499,31 @@ async function handleExperienceSubmitAndStartTrials() {
     const ageInput = document.getElementById('ageInput');
     const selectedGenderRadio = document.querySelector('input[name="gender"]:checked');
 
-    // Basic validation for age (required)
-    if (!ageInput || !ageInput.value) { // Check if input exists and has a value
-        alert("Bitte gib dein Alter an.");
-        return; // Stop submission
-    }
-    // More detailed age validation
-    if (ageInput) {
+   if (ageInput && ageInput.value.trim() !== "") { // Check if something was actually entered
          const ageValue = parseInt(ageInput.value);
-         const minAge = parseInt(ageInput.min) || 10; // Use min from HTML or default to 10
-         const maxAge = parseInt(ageInput.max) || 120; // Use max from HTML or default to 120
+         const minAge = parseInt(ageInput.min) || 10;
+         const maxAge = parseInt(ageInput.max) || 120;
+         // Validate only if a value was entered
          if (isNaN(ageValue) || ageValue < minAge || ageValue > maxAge) {
-              alert(`Bitte gib ein gültiges Alter zwischen ${minAge} und ${maxAge} ein.`);
-              return; // Stop submission
+              alert(`Bitte gib ein gültiges Alter zwischen ${minAge} und ${maxAge} ein oder lasse das Feld leer.`);
+              return; // Stop submission only if input is invalid
          }
          age = ageValue; // Store valid age as number
-    }
-
-    // Basic validation for gender (required)
-    const genderRadios = document.getElementsByName('gender');
-    let isGenderRequired = false;
-    // Check if the required attribute exists on the first radio button of the group
-    if(genderRadios.length > 0 && genderRadios[0].hasAttribute('required')) {
-        isGenderRequired = true;
-    }
-    if (selectedGenderRadio) {
-        gender = selectedGenderRadio.value; // Get value if one is checked
-    } else if (isGenderRequired) {
-        // If required and none is checked, alert user
-        alert("Bitte wähle eine Option für Geschlecht aus.");
-        return; // Stop submission
-    }
-    // If not required and none selected, gender remains null
+    } // If empty, age remains null
 
     console.log("Collected Age:", age);
     console.log("Collected Gender:", gender);
-    // *** ADDED CODE END ***
-
 
     // --- Get Instrument Data ---
     const instrumentData = collectExperienceData(); // Call existing helper
     console.log("Collected Instrument Data:", instrumentData);
 
 
-    // *** MODIFIED: Store combined experience data globally ***
     collectedExperienceData = {
         age: age, // Include collected age
         gender: gender, // Include collected gender
         instruments: instrumentData // Include instrument array
     };
-    // *** ---------------------------------------------- ***
 
 
     // --- Step 2: Hide form, Show experiment ---
