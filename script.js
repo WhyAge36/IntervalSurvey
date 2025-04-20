@@ -488,43 +488,47 @@ function handleSubmitChoice() {
 
 // --- Function triggered by the Submit EXPERIENCE Button ---
 // --- Function triggered by the Submit EXPERIENCE Button ---
+// --- Function triggered by the Submit EXPERIENCE Button ---
 async function handleExperienceSubmitAndStartTrials() {
     console.log("--- submitExperienceButton clicked ---");
 
     // --- Step 1: Collect Experience Data ---
-
-    // *** ADDED CODE START: Get Age and Gender ***
     let age = null;
-    let gender = null;
+    let gender = null; // Initialize as null
     const ageInput = document.getElementById('ageInput');
-    const selectedGenderRadio = document.querySelector('input[name="gender"]:checked');
+    const selectedGenderRadio = document.querySelector('input[name="gender"]:checked'); // Find checked radio
 
-   if (ageInput && ageInput.value.trim() !== "") { // Check if something was actually entered
+    // --- Get and Validate Age (if provided) ---
+    if (ageInput && ageInput.value.trim() !== "") {
          const ageValue = parseInt(ageInput.value);
          const minAge = parseInt(ageInput.min) || 10;
          const maxAge = parseInt(ageInput.max) || 120;
-         // Validate only if a value was entered
          if (isNaN(ageValue) || ageValue < minAge || ageValue > maxAge) {
               alert(`Bitte gib ein gültiges Alter zwischen ${minAge} und ${maxAge} ein oder lasse das Feld leer.`);
-              return; // Stop submission only if input is invalid
+              return;
          }
-         age = ageValue; // Store valid age as number
-    } // If empty, age remains null
+         age = ageValue;
+    }
+  
+    if (selectedGenderRadio) {
+        gender = selectedGenderRadio.value; 
+    } else {
+        console.log("No gender selected (optional field).");
+    }
 
     console.log("Collected Age:", age);
-    console.log("Collected Gender:", gender);
+    console.log("Collected Gender:", gender); // This should now show the selected value or null
 
     // --- Get Instrument Data ---
-    const instrumentData = collectExperienceData(); // Call existing helper
+    const instrumentData = collectExperienceData();
     console.log("Collected Instrument Data:", instrumentData);
 
-
+    // Store combined experience data globally
     collectedExperienceData = {
-        age: age, // Include collected age
-        gender: gender, // Include collected gender
-        instruments: instrumentData // Include instrument array
+        age: age,
+        gender: gender, // Now uses the potentially updated gender value
+        instruments: instrumentData
     };
-
 
     // --- Step 2: Hide form, Show experiment ---
     if (experienceFormDiv) experienceFormDiv.style.display = "none";
