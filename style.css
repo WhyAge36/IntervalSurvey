@@ -403,9 +403,9 @@ button:disabled {
     display: block;
     line-height: 36px;
 }
-/*#addInstrument:hover:not(:disabled) {
+#addInstrument:hover:not(:disabled) {
     background-color: rgba(160, 80, 255, 0.1);
-}*/
+}
 
 /* Remove Row Button (-) */
 .instrument-row .removeRow {
@@ -476,7 +476,7 @@ button:disabled {
         --accent-dark: #a060ff;
         --accent-light: #8030df;
 
-        --selected-tint-bg: rgba(160, 80, 255, 0.08); /* Maybe lighter tint */
+        --selected-tint-bg: rgba(160, 80, 255, 0.15); /* Maybe lighter tint */
         --disabled-bg: #e0e0e0;       /* Light gray disabled background */
         --disabled-text: #a0a0a0;     /* Mid-gray disabled text */
     }
