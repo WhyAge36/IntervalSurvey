@@ -403,9 +403,9 @@ button:disabled {
     display: block;
     line-height: 36px;
 }
-#addInstrument:hover:not(:disabled) {
+/*#addInstrument:hover:not(:disabled) {
     background-color: rgba(160, 80, 255, 0.1);
-}
+}*/
 
 /* Remove Row Button (-) */
 .instrument-row .removeRow {
