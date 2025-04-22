@@ -264,12 +264,7 @@ button:active:not(:disabled) {
     border: 1px solid transparent;
     min-width: 140px;
 }
-#startButton:hover:not(:disabled),
-.playButton:hover:not(:disabled),
-#submitChoiceButton:hover:not(:disabled),
-#submitExperienceButton:hover:not(:disabled) {
-    background-color: var(--accent-light);
-}
+
 #startButton,
 #submitChoiceButton,
 #submitExperienceButton {
@@ -285,9 +280,7 @@ button:active:not(:disabled) {
     border-radius: 8px;
     padding: 12px 22px;
 }
-.picker-button:hover:not(:disabled):not(.selected) {
-    background-color: rgba(160, 80, 255, 0.05);
-}
+
 .picker-button.selected {
     /* Style added by JS */
     background-color: var(--selected-tint-bg);
@@ -403,10 +396,6 @@ button:disabled {
     display: block;
     line-height: 36px;
 }
-#addInstrument:hover:not(:disabled) {
-    background-color: rgba(160, 80, 255, 0.1);
-}
-
 /* Remove Row Button (-) */
 .instrument-row .removeRow {
     flex: 0 0 auto;
@@ -430,6 +419,23 @@ button:disabled {
     display: block;
     width: 24px;
     height: 24px;
+}
+
+@media (hover: hover) {
+    #startButton:hover:not(:disabled),
+    .playButton:hover:not(:disabled),
+    #submitChoiceButton:hover:not(:disabled),
+    #submitExperienceButton:hover:not(:disabled) {
+      background-color: var(--accent-light); /* Lighter on hover for primary */
+    }
+
+    .picker-button:hover:not(:disabled):not(.selected) {
+      background-color: rgba(160, 80, 255, 0.05); /* Subtle tint on hover for secondary */
+    }
+
+    #addInstrument:hover:not(:disabled) {
+      background-color: rgba(160, 80, 255, 0.1);
+    }
 }
 
 /* --- Responsive Adjustments --- */
