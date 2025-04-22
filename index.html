@@ -10,49 +10,43 @@
     <body>
         <div id="instructions">
             <h2>Anleitung</h2>
-            <p>
-                <strong>Willkommen zum Intervallvergleichs-Experiment!</strong>
-            </p>
+<p><strong>Willkommen zum Intervallvergleichs-Experiment!</strong></p>
 
-            <p>
-                Vielen Dank, dass du dir Zeit nimmst – dieses Experiment ist
-                Teil meiner Maturaarbeit im Bereich Musikwahrnehmung.
-            </p>
+<p>
+    Vielen Dank, dass du dir Zeit nimmst – dieses Experiment ist Teil meiner Maturaarbeit 
+    im Bereich Musikwahrnehmung.
+</p>
 
-            <p>
-                <strong>Wichtig:</strong>
-                Bitte verwende Kopfhörer und achte auf eine ruhige Umgebung.
-                Stelle die Lautstärke so ein, dass du angenehm hören kannst.
-            </p>
+<p><strong>Wichtig:</strong> 
+    Bitte verwende Kopfhörer und achte auf eine ruhige Umgebung. 
+    Stelle die Lautstärke so ein, dass du angenehm hören kannst.
+    <br>
+    <em>Falls du ein Smartphone verwendest, achte darauf, dass der Stummmodus (Silent Mode) ausgeschaltet ist – 
+    sonst hörst du möglicherweise keinen Ton.</em>
+</p>
 
-            <p>
-                Bevor es losgeht, fragen wir dich kurz nach deinem Alter, deinem
-                Geschlecht und deiner musikalischen Erfahrung. Alle Angaben sind
-                freiwillig und helfen bei der Auswertung.
-            </p>
+<p>
+    Bevor es losgeht, fragen wir dich kurz nach deinem Alter, deinem Geschlecht 
+    und deiner musikalischen Erfahrung. 
+    Alle Angaben sind freiwillig und helfen bei der Auswertung.
+</p>
 
-            <p>
-                Anschließend hörst du in 18 kurzen Durchgängen jeweils zwei
-                Versionen eines Intervalls (A und B), die sich leicht in ihrer
-                Stimmung unterscheiden. Du kannst beide beliebig oft anhören und
-                vergleichen.
-            </p>
+<p>
+    Anschließend hörst du in 18 kurzen Durchgängen jeweils zwei Versionen eines Intervalls (A und B), 
+    die sich leicht in ihrer Stimmung unterscheiden. Du kannst beide beliebig oft anhören und vergleichen.
+</p>
 
-            <p>
-                <strong>Deine Aufgabe:</strong> Wähle jeweils die Version, die
-                für dich <strong>stimmiger</strong> klingt – also bei der das
-                Zusammenspiel der beiden Töne für dich am besten passt. Wenn du
-                keinen Unterschied hörst, kannst du auch „Kein Unterschied“
-                auswählen.
-            </p>
+<p><strong>Deine Aufgabe:</strong> 
+    Wähle jeweils die Version, die für dich <strong>stimmiger</strong> klingt – 
+    also bei der das Zusammenspiel der beiden Töne für dich am besten passt. 
+    Wenn du keinen Unterschied hörst, kannst du auch „Kein Unterschied“ auswählen.
+</p>
 
-            <p>
-                <strong>Datenschutz:</strong>
-                Deine Antworten werden anonymisiert gespeichert und vertraulich
-                behandelt. Es werden keine persönlichen Daten erhoben, die
-                Rückschlüsse auf deine Identität zulassen.
-            </p>
-
+<p><strong>Datenschutz:</strong> 
+    Deine Antworten werden anonymisiert gespeichert und vertraulich behandelt. 
+    Es werden keine persönlichen Daten erhoben, die Rückschlüsse auf deine Identität zulassen.
+</p>
+            
             <div class="headphone-check">
                 <input
                     type="checkbox"
@@ -70,9 +64,7 @@
 
         <div id="experiment" style="display: none">
             <h2 id="trialCounter">Durchgang X von Y</h2>
-            <p>
-                Höre dir die Intervalle an. Welches klingt für dich stimmiger?
-            </p>
+            <p>Höre dir die Intervalle an. Welches klingt für dich stimmiger?</p>
 
             <div class="play-controls">
                 <button type="button" class="playButton" data-target="audioA">
@@ -110,66 +102,35 @@
             <h3>Persönliche Angaben</h3>
             <div class="form-group">
                 <label for="ageInput">Alter:</label>
-                <input
-                    type="number"
-                    id="ageInput"
-                    name="age"
-                    min="10"
-                    max="120"
-                    placeholder="z.B. 25"
-                    required
-                />
+                <input type="number" id="ageInput" name="age" min="10" max="120" placeholder="z.B. 25" required>
             </div>
 
             <div class="form-group">
-                <label>Geschlecht:</label>
+                <label>Geschlecht:</label> 
                 <div class="radio-group">
                     <div class="radio-option">
-                        <input
-                            type="radio"
-                            id="genderFemale"
-                            name="gender"
-                            value="Weiblich"
-                            required
-                        />
+                        <input type="radio" id="genderFemale" name="gender" value="Weiblich" required>
                         <label for="genderFemale">Weiblich</label>
                     </div>
                     <div class="radio-option">
-                        <input
-                            type="radio"
-                            id="genderMale"
-                            name="gender"
-                            value="Männlich"
-                        />
+                        <input type="radio" id="genderMale" name="gender" value="Männlich">
                         <label for="genderMale">Männlich</label>
                     </div>
                     <div class="radio-option">
-                        <input
-                            type="radio"
-                            id="genderDiverse"
-                            name="gender"
-                            value="Divers"
-                        />
+                        <input type="radio" id="genderDiverse" name="gender" value="Divers">
                         <label for="genderDiverse">Divers</label>
                     </div>
                     <div class="radio-option">
-                        <input
-                            type="radio"
-                            id="genderPreferNo"
-                            name="gender"
-                            value="Keine Angabe"
-                        />
+                        <input type="radio" id="genderPreferNo" name="gender" value="Keine Angabe">
                         <label for="genderPreferNo">Keine Angabe</label>
                     </div>
                 </div>
             </div>
             <h3>Musikalische Erfarung</h3>
             <form id="musicForm">
-                <p>
-                    Welche musikalischen Erfahrungen hast du? Gib die
-                    Instrumente an, die du spielst oder gespielt hast, und wie
-                    viele Jahre du jeweils damit Erfahrung hast. Du kannst auch
-                    Gesang oder digitale Musikproduktion angeben!
+                <p>Welche musikalischen Erfahrungen hast du? Gib die Instrumente an, 
+                    die du spielst oder gespielt hast, und wie viele Jahre du jeweils damit Erfahrung hast. 
+                    Du kannst auch Gesang oder digitale Musikproduktion angeben!
                 </p>
                 <div id="instrumentContainer">
                     <div class="instrument-row">
