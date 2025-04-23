@@ -1,7 +1,7 @@
 console.log("Script loading...");
 
 // --- Configuration ---
-const repetitions = 3;
+const repetitions = 2;
 const baseFreq = 261.63; // C4 Hz
 const stimuliData = {
   M3_Sine_JI: { waveform: "sine", frequencies: [baseFreq, (baseFreq * 5) / 4] },
